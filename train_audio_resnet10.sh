@@ -74,7 +74,8 @@ python main.py system=audio_distill \
   ++ckpt_preload=ckpt/ce_audio_ColdZone_resnet10/last.ckpt \
   ++model_name=dynamic_cdfsl_audio_HotZone_resnet10 \
   ++trainer.gpus=1 \
-  ++trainer.max_epochs=60
+  ++trainer.max_epochs=60 \
+  ++optimizer.lr=0.001
 
 if [ $? -ne 0 ]; then
     echo "❌ Stage 2训练失败！"

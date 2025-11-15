@@ -37,7 +37,7 @@ trainer:
   weights_save_path: "ckpt/ce_audio_ColdZone_vggish"
 
 optimizer:
-  lr: 0.0001  # VGGish建议的学习率
+  lr: 0.001  # VGGish建议的学习率
 
 scheduler:
   _target_: torch.optim.lr_scheduler.StepLR
