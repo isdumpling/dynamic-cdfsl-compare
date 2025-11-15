@@ -1,0 +1,232 @@
+ 11-15 at 08:48 | backbone: vggish
+model_name: dynamic_cdfsl_audio_hot1331
+model_args: null
+linear_bn: false
+linear_bn_affine: false
+suffix: ''
+source_data: miniImageNet
+disable_validation: false
+seed: 0
+ckpt: null
+load_base: true
+load_flexible: true
+resume: false
+pretrained: false
+data:
+  disable_validation: false
+  dataset: cold_zone
+  val_dataset: hot_13_31
+  test_dataset: null
+  image_size: 64
+  batch_size: 32
+  val_batch_size: null
+  num_classes: 2
+  split_fraction: 0.2
+  normalize_type: imagenet
+  train_aug: true
+  val_aug: few_shot_test
+  train_split_type: null
+  val_split_type: null
+  seed: 0
+  split_seed: 0
+  num_workers: 4
+  shuffle_val: false
+  limit_train_data: null
+  replica_rank: null
+  num_replica: 1
+  n_way: 2
+  n_shot: 5
+  n_query: 15
+  num_episodes: 600
+trainer:
+  logger: false
+  checkpoint_callback: true
+  default_root_dir: null
+  num_nodes: 1
+  tpu_cores: null
+  check_val_every_n_epoch: 5
+  fast_dev_run: false
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  accelerator: null
+  sync_batchnorm: true
+  num_sanity_val_steps: 0
+  resume_from_checkpoint: null
+  benchmark: false
+  reload_dataloaders_every_epoch: false
+  terminate_on_nan: false
+  auto_scale_batch_size: false
+  automatic_optimization: null
+  progress_bar_refresh_rate: 0
+  log_every_n_steps: 100000
+  replace_sampler_ddp: false
+  weights_save_path: ckpt/dynamic_cdfsl_audio_hot1331
+  max_epochs: 60
+  gpus: 1
+  deterministic: true
+disable_logfile: false
+logger:
+  _target_: utils.custom_logger.CustomLogger
+  name: dynamic_cdfsl_audio_hot1331
+  version: null
+  test: false
+  save_dir: logs
+  disable_logfile: false
+optimizer:
+  _target_: torch.optim.SGD
+  lr: 0.001
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0001
+  nesterov: false
+eval_mode: few_shot
+n_way: 2
+n_shot: 5
+n_query: 15
+print_val: false
+eval:
+  fine_tune:
+    name: LR
+    use_norm: false
+callbacks:
+  model_checkpoint:
+    _target_: callbacks.custom_callbacks.CheckpointCallback
+    monitor: acc_mean
+    save_top_k: 1
+    save_last: true
+    mode: max
+    filename: '{epoch:03d}'
+    dirpath: ckpt/dynamic_cdfsl_audio_hot1331
+    verbose: true
+    save_every_n_epoch: null
+  lr_logger:
+    _target_: callbacks.lr_monitor.LearningRateMonitor
+    logging_interval: epoch
+scheduler:
+  _target_: torch.optim.lr_scheduler.MultiStepLR
+  milestones:
+  - 42
+  - 54
+  gamma: 0.1
+test: false
+lm_ce: 1
+lm_u: 1
+cosine_weight: true
+teacher_temp: 0.1
+apply_unlabel: true
+reset_student_head: false
+unlabel_aug: weak_strong
+simclr: false
+simclr_params:
+  temperature: 0.1
+  projection: true
+unlabel_params:
+  dataset: hot_13_31
+  batch_size: 32
+  unlabel_aug: weak_strong
+  no_stop_grad: false
+ckpt_preload: ckpt/ce_audio_cold_zone_vggish/last.ckpt
+launcher:
+  time: '6'
+  name: local
+  gpus: 1
+system_name: ce_distill_ema
+mometum_update: 0.99
+apply_center: false
+center_momentum: 0.9
+extractor: student
+
+ 11-15 at 08:48 | None
+ 11-15 at 08:48 | []
+ 11-15 at 08:48 | loaded dataset hot_13_31:: #data: 644
+ 11-15 at 08:48 | unlabel batch: 20
+ 11-15 at 08:48 | unlabel loader size: 20
+ 11-15 at 08:48 | loaded dataset cold_zone:: #data: 1369
+ 11-15 at 08:48 | train loader size: 42
+ 11-15 at 08:48 | epoch: 0     step: 41     :: train_start_timestamp: 1763167744.0000  lr-SGD: 0.0010  loss_train_epoch: 0.2561  l_ce_epoch: 0.2561  l_u_epoch: 0.0826  top1_epoch: 0.9293
+ 11-15 at 08:48 | epoch: 1     step: 83     :: lr-SGD: 0.0010  loss_train_epoch: 0.2562  l_ce_epoch: 0.2560  l_u_epoch: 0.0823  top1_epoch: 0.9293
+ 11-15 at 08:48 | epoch: 2     step: 125    :: lr-SGD: 0.0010  loss_train_epoch: 0.2565  l_ce_epoch: 0.2560  l_u_epoch: 0.0815  top1_epoch: 0.9293
+ 11-15 at 08:48 | epoch: 3     step: 167    :: lr-SGD: 0.0010  loss_train_epoch: 0.2569  l_ce_epoch: 0.2559  l_u_epoch: 0.0811  top1_epoch: 0.9293
+ 11-15 at 08:49 | loading indices from data/cache_cdfsl/hot31_fs_indices__0.2_0.npy
+ 11-15 at 08:49 | loaded dataset hot_13_31:: #class: 2, #data: 644
+ 11-15 at 08:49 | Test Acc (hot_13_31) = 0.6269 +- 0.0085, Macro F1 = 0.6174 +- 0.0087
+ 11-15 at 08:49 | epoch: 4     step: 209    :: acc_mean: 0.6269  acc_std: 0.0085  macro_f1_mean: 0.6174  macro_f1_std: 0.0087  acc_mean_full: 0.6269  macro_f1_full: 0.6174
+ 11-15 at 08:49 | epoch: 4     step: 209    :: lr-SGD: 0.0010  loss_train_epoch: 0.2575  l_ce_epoch: 0.2558  l_u_epoch: 0.0805  top1_epoch: 0.9293
+ 11-15 at 08:49 | epoch: 5     step: 251    :: lr-SGD: 0.0010  loss_train_epoch: 0.2565  l_ce_epoch: 0.2540  l_u_epoch: 0.0798  top1_epoch: 0.9301
+ 11-15 at 08:49 | epoch: 6     step: 293    :: lr-SGD: 0.0010  loss_train_epoch: 0.2573  l_ce_epoch: 0.2539  l_u_epoch: 0.0793  top1_epoch: 0.9301
+ 11-15 at 08:49 | epoch: 7     step: 335    :: lr-SGD: 0.0010  loss_train_epoch: 0.2565  l_ce_epoch: 0.2520  l_u_epoch: 0.0789  top1_epoch: 0.9308
+ 11-15 at 08:49 | epoch: 8     step: 377    :: lr-SGD: 0.0010  loss_train_epoch: 0.2614  l_ce_epoch: 0.2557  l_u_epoch: 0.0781  top1_epoch: 0.9293
+ 11-15 at 08:49 | Test Acc (hot_13_31) = 0.6236 +- 0.0083, Macro F1 = 0.6144 +- 0.0085
+ 11-15 at 08:49 | epoch: 9     step: 419    :: acc_mean: 0.6236  acc_std: 0.0083  macro_f1_mean: 0.6144  macro_f1_std: 0.0085  acc_mean_full: 0.6236  macro_f1_full: 0.6144
+ 11-15 at 08:49 | epoch: 9     step: 419    :: lr-SGD: 0.0010  loss_train_epoch: 0.2645  l_ce_epoch: 0.2575  l_u_epoch: 0.0775  top1_epoch: 0.9286
+ 11-15 at 08:49 | epoch: 10    step: 461    :: lr-SGD: 0.0010  loss_train_epoch: 0.2622  l_ce_epoch: 0.2537  l_u_epoch: 0.0769  top1_epoch: 0.9301
+ 11-15 at 08:49 | epoch: 11    step: 503    :: lr-SGD: 0.0010  loss_train_epoch: 0.2637  l_ce_epoch: 0.2537  l_u_epoch: 0.0761  top1_epoch: 0.9301
+ 11-15 at 08:49 | epoch: 12    step: 545    :: lr-SGD: 0.0010  loss_train_epoch: 0.2596  l_ce_epoch: 0.2480  l_u_epoch: 0.0752  top1_epoch: 0.9323
+ 11-15 at 08:49 | epoch: 13    step: 587    :: lr-SGD: 0.0010  loss_train_epoch: 0.2689  l_ce_epoch: 0.2555  l_u_epoch: 0.0744  top1_epoch: 0.9293
+ 11-15 at 08:50 | Test Acc (hot_13_31) = 0.6270 +- 0.0086, Macro F1 = 0.6179 +- 0.0088
+ 11-15 at 08:50 | epoch: 14    step: 629    :: acc_mean: 0.6270  acc_std: 0.0086  macro_f1_mean: 0.6179  macro_f1_std: 0.0088  acc_mean_full: 0.6270  macro_f1_full: 0.6179
+ 11-15 at 08:50 | epoch: 14    step: 629    :: lr-SGD: 0.0010  loss_train_epoch: 0.2687  l_ce_epoch: 0.2536  l_u_epoch: 0.0734  top1_epoch: 0.9301
+ 11-15 at 08:50 | epoch: 15    step: 671    :: lr-SGD: 0.0010  loss_train_epoch: 0.2705  l_ce_epoch: 0.2536  l_u_epoch: 0.0725  top1_epoch: 0.9301
+ 11-15 at 08:50 | epoch: 16    step: 713    :: lr-SGD: 0.0010  loss_train_epoch: 0.2724  l_ce_epoch: 0.2536  l_u_epoch: 0.0717  top1_epoch: 0.9301
+ 11-15 at 08:50 | epoch: 17    step: 755    :: lr-SGD: 0.0010  loss_train_epoch: 0.2743  l_ce_epoch: 0.2536  l_u_epoch: 0.0706  top1_epoch: 0.9301
+ 11-15 at 08:50 | epoch: 18    step: 797    :: lr-SGD: 0.0010  loss_train_epoch: 0.2743  l_ce_epoch: 0.2517  l_u_epoch: 0.0695  top1_epoch: 0.9308
+ 11-15 at 08:50 | Test Acc (hot_13_31) = 0.6203 +- 0.0085, Macro F1 = 0.6106 +- 0.0087
+ 11-15 at 08:50 | epoch: 19    step: 839    :: acc_mean: 0.6203  acc_std: 0.0085  macro_f1_mean: 0.6106  macro_f1_std: 0.0087  acc_mean_full: 0.6203  macro_f1_full: 0.6106
+ 11-15 at 08:50 | epoch: 19    step: 839    :: lr-SGD: 0.0010  loss_train_epoch: 0.2821  l_ce_epoch: 0.2577  l_u_epoch: 0.0684  top1_epoch: 0.9286
+ 11-15 at 08:50 | epoch: 20    step: 881    :: lr-SGD: 0.0010  loss_train_epoch: 0.2801  l_ce_epoch: 0.2537  l_u_epoch: 0.0675  top1_epoch: 0.9301
+ 11-15 at 08:50 | epoch: 21    step: 923    :: lr-SGD: 0.0010  loss_train_epoch: 0.2821  l_ce_epoch: 0.2539  l_u_epoch: 0.0662  top1_epoch: 0.9301
+ 11-15 at 08:50 | epoch: 22    step: 965    :: lr-SGD: 0.0010  loss_train_epoch: 0.2841  l_ce_epoch: 0.2541  l_u_epoch: 0.0649  top1_epoch: 0.9301
+ 11-15 at 08:50 | epoch: 23    step: 1007   :: lr-SGD: 0.0010  loss_train_epoch: 0.2860  l_ce_epoch: 0.2541  l_u_epoch: 0.0639  top1_epoch: 0.9301
+ 11-15 at 08:51 | Test Acc (hot_13_31) = 0.6209 +- 0.0085, Macro F1 = 0.6108 +- 0.0088
+ 11-15 at 08:51 | epoch: 24    step: 1049   :: acc_mean: 0.6209  acc_std: 0.0085  macro_f1_mean: 0.6108  macro_f1_std: 0.0088  acc_mean_full: 0.6209  macro_f1_full: 0.6108
+ 11-15 at 08:51 | epoch: 24    step: 1049   :: lr-SGD: 0.0010  loss_train_epoch: 0.2879  l_ce_epoch: 0.2543  l_u_epoch: 0.0626  top1_epoch: 0.9301
+ 11-15 at 08:51 | epoch: 25    step: 1091   :: lr-SGD: 0.0010  loss_train_epoch: 0.2918  l_ce_epoch: 0.2564  l_u_epoch: 0.0616  top1_epoch: 0.9293
+ 11-15 at 08:51 | epoch: 26    step: 1133   :: lr-SGD: 0.0010  loss_train_epoch: 0.2896  l_ce_epoch: 0.2526  l_u_epoch: 0.0604  top1_epoch: 0.9308
+ 11-15 at 08:51 | epoch: 27    step: 1175   :: lr-SGD: 0.0010  loss_train_epoch: 0.2914  l_ce_epoch: 0.2530  l_u_epoch: 0.0590  top1_epoch: 0.9308
+ 11-15 at 08:51 | epoch: 28    step: 1217   :: lr-SGD: 0.0010  loss_train_epoch: 0.2973  l_ce_epoch: 0.2575  l_u_epoch: 0.0577  top1_epoch: 0.9293
+ 11-15 at 08:51 | Test Acc (hot_13_31) = 0.6138 +- 0.0084, Macro F1 = 0.6028 +- 0.0086
+ 11-15 at 08:51 | epoch: 29    step: 1259   :: acc_mean: 0.6138  acc_std: 0.0084  macro_f1_mean: 0.6028  macro_f1_std: 0.0086  acc_mean_full: 0.6138  macro_f1_full: 0.6028
+ 11-15 at 08:51 | epoch: 29    step: 1259   :: lr-SGD: 0.0010  loss_train_epoch: 0.2969  l_ce_epoch: 0.2555  l_u_epoch: 0.0567  top1_epoch: 0.9301
+ 11-15 at 08:51 | epoch: 30    step: 1301   :: lr-SGD: 0.0010  loss_train_epoch: 0.3029  l_ce_epoch: 0.2601  l_u_epoch: 0.0556  top1_epoch: 0.9286
+ 11-15 at 08:51 | epoch: 31    step: 1343   :: lr-SGD: 0.0010  loss_train_epoch: 0.3002  l_ce_epoch: 0.2561  l_u_epoch: 0.0545  top1_epoch: 0.9301
+ 11-15 at 08:51 | epoch: 32    step: 1385   :: lr-SGD: 0.0010  loss_train_epoch: 0.2995  l_ce_epoch: 0.2544  l_u_epoch: 0.0533  top1_epoch: 0.9308
+ 11-15 at 08:51 | epoch: 33    step: 1427   :: lr-SGD: 0.0010  loss_train_epoch: 0.3031  l_ce_epoch: 0.2570  l_u_epoch: 0.0521  top1_epoch: 0.9301
+ 11-15 at 08:52 | Test Acc (hot_13_31) = 0.6066 +- 0.0079, Macro F1 = 0.5959 +- 0.0081
+ 11-15 at 08:52 | epoch: 34    step: 1469   :: acc_mean: 0.6066  acc_std: 0.0079  macro_f1_mean: 0.5959  macro_f1_std: 0.0081  acc_mean_full: 0.6066  macro_f1_full: 0.5959
+ 11-15 at 08:52 | epoch: 34    step: 1469   :: lr-SGD: 0.0010  loss_train_epoch: 0.3068  l_ce_epoch: 0.2596  l_u_epoch: 0.0510  top1_epoch: 0.9293
+ 11-15 at 08:52 | epoch: 35    step: 1511   :: lr-SGD: 0.0010  loss_train_epoch: 0.3081  l_ce_epoch: 0.2602  l_u_epoch: 0.0498  top1_epoch: 0.9293
+ 11-15 at 08:52 | epoch: 36    step: 1553   :: lr-SGD: 0.0010  loss_train_epoch: 0.3048  l_ce_epoch: 0.2561  l_u_epoch: 0.0489  top1_epoch: 0.9308
+ 11-15 at 08:52 | epoch: 37    step: 1595   :: lr-SGD: 0.0010  loss_train_epoch: 0.3067  l_ce_epoch: 0.2588  l_u_epoch: 0.0479  top1_epoch: 0.9301
+ 11-15 at 08:52 | epoch: 38    step: 1637   :: lr-SGD: 0.0010  loss_train_epoch: 0.3062  l_ce_epoch: 0.2593  l_u_epoch: 0.0469  top1_epoch: 0.9301
+ 11-15 at 08:52 | Test Acc (hot_13_31) = 0.5993 +- 0.0084, Macro F1 = 0.5882 +- 0.0086
+ 11-15 at 08:52 | epoch: 39    step: 1679   :: acc_mean: 0.5993  acc_std: 0.0084  macro_f1_mean: 0.5882  macro_f1_std: 0.0086  acc_mean_full: 0.5993  macro_f1_full: 0.5882
+ 11-15 at 08:52 | epoch: 39    step: 1679   :: lr-SGD: 0.0010  loss_train_epoch: 0.3036  l_ce_epoch: 0.2577  l_u_epoch: 0.0459  top1_epoch: 0.9308
+ 11-15 at 08:52 | epoch: 40    step: 1721   :: lr-SGD: 0.0010  loss_train_epoch: 0.3078  l_ce_epoch: 0.2625  l_u_epoch: 0.0453  top1_epoch: 0.9293
+ 11-15 at 08:52 | epoch: 41    step: 1763   :: lr-SGD: 0.0010  loss_train_epoch: 0.3029  l_ce_epoch: 0.2582  l_u_epoch: 0.0448  top1_epoch: 0.9308
+ 11-15 at 08:52 | epoch: 42    step: 1805   :: lr-SGD: 0.0001  loss_train_epoch: 0.3073  l_ce_epoch: 0.2630  l_u_epoch: 0.0443  top1_epoch: 0.9293
+ 11-15 at 08:52 | epoch: 43    step: 1847   :: lr-SGD: 0.0001  loss_train_epoch: 0.3073  l_ce_epoch: 0.2631  l_u_epoch: 0.0442  top1_epoch: 0.9293
+ 11-15 at 08:53 | Test Acc (hot_13_31) = 0.5953 +- 0.0087, Macro F1 = 0.5843 +- 0.0088
+ 11-15 at 08:53 | epoch: 44    step: 1889   :: acc_mean: 0.5953  acc_std: 0.0087  macro_f1_mean: 0.5843  macro_f1_std: 0.0088  acc_mean_full: 0.5953  macro_f1_full: 0.5843
+ 11-15 at 08:53 | epoch: 44    step: 1889   :: lr-SGD: 0.0001  loss_train_epoch: 0.3027  l_ce_epoch: 0.2585  l_u_epoch: 0.0442  top1_epoch: 0.9308
+ 11-15 at 08:53 | epoch: 45    step: 1931   :: lr-SGD: 0.0001  loss_train_epoch: 0.3027  l_ce_epoch: 0.2586  l_u_epoch: 0.0441  top1_epoch: 0.9308
+ 11-15 at 08:53 | epoch: 46    step: 1973   :: lr-SGD: 0.0001  loss_train_epoch: 0.3073  l_ce_epoch: 0.2632  l_u_epoch: 0.0441  top1_epoch: 0.9293
+ 11-15 at 08:53 | epoch: 47    step: 2015   :: lr-SGD: 0.0001  loss_train_epoch: 0.3073  l_ce_epoch: 0.2633  l_u_epoch: 0.0440  top1_epoch: 0.9293
+ 11-15 at 08:53 | epoch: 48    step: 2057   :: lr-SGD: 0.0001  loss_train_epoch: 0.3095  l_ce_epoch: 0.2656  l_u_epoch: 0.0439  top1_epoch: 0.9286
+ 11-15 at 08:53 | Test Acc (hot_13_31) = 0.5958 +- 0.0086, Macro F1 = 0.5851 +- 0.0088
+ 11-15 at 08:53 | epoch: 49    step: 2099   :: acc_mean: 0.5958  acc_std: 0.0086  macro_f1_mean: 0.5851  macro_f1_std: 0.0088  acc_mean_full: 0.5958  macro_f1_full: 0.5851
+ 11-15 at 08:53 | epoch: 49    step: 2099   :: lr-SGD: 0.0001  loss_train_epoch: 0.3049  l_ce_epoch: 0.2610  l_u_epoch: 0.0439  top1_epoch: 0.9301
+ 11-15 at 08:53 | epoch: 50    step: 2141   :: lr-SGD: 0.0001  loss_train_epoch: 0.3071  l_ce_epoch: 0.2633  l_u_epoch: 0.0438  top1_epoch: 0.9293
+ 11-15 at 08:53 | epoch: 51    step: 2183   :: lr-SGD: 0.0001  loss_train_epoch: 0.3025  l_ce_epoch: 0.2588  l_u_epoch: 0.0438  top1_epoch: 0.9308
+ 11-15 at 08:53 | epoch: 52    step: 2225   :: lr-SGD: 0.0001  loss_train_epoch: 0.3071  l_ce_epoch: 0.2634  l_u_epoch: 0.0437  top1_epoch: 0.9293
+ 11-15 at 08:53 | epoch: 53    step: 2267   :: lr-SGD: 0.0001  loss_train_epoch: 0.3094  l_ce_epoch: 0.2657  l_u_epoch: 0.0437  top1_epoch: 0.9286
+ 11-15 at 08:54 | Test Acc (hot_13_31) = 0.5916 +- 0.0087, Macro F1 = 0.5805 +- 0.0088
+ 11-15 at 08:54 | epoch: 54    step: 2309   :: acc_mean: 0.5916  acc_std: 0.0087  macro_f1_mean: 0.5805  macro_f1_std: 0.0088  acc_mean_full: 0.5916  macro_f1_full: 0.5805
+ 11-15 at 08:54 | epoch: 54    step: 2309   :: lr-SGD: 0.0000  loss_train_epoch: 0.3048  l_ce_epoch: 0.2611  l_u_epoch: 0.0437  top1_epoch: 0.9301
+ 11-15 at 08:54 | epoch: 55    step: 2351   :: lr-SGD: 0.0000  loss_train_epoch: 0.3072  l_ce_epoch: 0.2635  l_u_epoch: 0.0436  top1_epoch: 0.9293
+ 11-15 at 08:54 | epoch: 56    step: 2393   :: lr-SGD: 0.0000  loss_train_epoch: 0.3048  l_ce_epoch: 0.2612  l_u_epoch: 0.0436  top1_epoch: 0.9301
+ 11-15 at 08:54 | epoch: 57    step: 2435   :: lr-SGD: 0.0000  loss_train_epoch: 0.3025  l_ce_epoch: 0.2589  l_u_epoch: 0.0436  top1_epoch: 0.9308
+ 11-15 at 08:54 | epoch: 58    step: 2477   :: lr-SGD: 0.0000  loss_train_epoch: 0.3094  l_ce_epoch: 0.2657  l_u_epoch: 0.0436  top1_epoch: 0.9286
+ 11-15 at 08:54 | Test Acc (hot_13_31) = 0.5905 +- 0.0088, Macro F1 = 0.5793 +- 0.0089
+ 11-15 at 08:54 | epoch: 59    step: 2519   :: acc_mean: 0.5905  acc_std: 0.0088  macro_f1_mean: 0.5793  macro_f1_std: 0.0089  acc_mean_full: 0.5905  macro_f1_full: 0.5793
+ 11-15 at 08:54 | epoch: 59    step: 2519   :: lr-SGD: 0.0000  loss_train_epoch: 0.3025  l_ce_epoch: 0.2589  l_u_epoch: 0.0436  top1_epoch: 0.9308

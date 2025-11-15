@@ -1,0 +1,57 @@
+# @package _global_
+# Stage 2: 目标域适应（HotZone）
+# 使用动态蒸馏从源域适应到目标域
+
+defaults:
+  - /system/ce_distill_abstract
+  - override /optimizer: SGD
+  - override /data: audio_data
+
+system_name: "ce_distill_ema"
+model_name: "dynamic_cdfsl_audio_HotZone"
+
+# 使用VGGish作为backbone
+backbone: "vggish"
+
+cosine_weight: true
+
+# EMA设置
+mometum_update: 0.99
+
+apply_center: false
+center_momentum: 0.9
+
+# 温度配置
+teacher_temp: 0.1
+
+# 从Stage 1加载预训练模型
+ckpt_preload: ckpt/ce_audio_ColdZone_vggish/last.ckpt
+
+# 特征提取器选择
+extractor: student
+
+data:
+  dataset: ColdZone  # 源域
+  val_dataset: HotZone  # 目标域作为验证集
+  test_dataset: null
+  batch_size: 32
+  image_size: 64
+
+# 未标记数据配置（目标域）
+unlabel_params:
+  dataset: HotZone  # 使用HotZone作为未标记目标域数据
+  batch_size: 32
+
+trainer:
+  max_epochs: 60
+  gpus: 1
+  check_val_every_n_epoch: 5
+  num_sanity_val_steps: 0
+  weights_save_path: "ckpt/dynamic_cdfsl_audio_HotZone"
+
+optimizer:
+  lr: 0.001
+
+launcher:
+  time: "6"
+

@@ -1,0 +1,49 @@
+# @package _global_
+# Stage 1: 源域预训练（ColdZone）
+# 使用交叉熵损失在源域数据上训练VGGish backbone
+
+defaults:
+  - /optimizer: SGD
+  - /eval: default_eval
+  - /eval/fine_tune: LR
+  - /callbacks: default_callbacks
+  - override /data: audio_data
+
+system_name: "ce"
+test: false
+eval_mode: "few_shot"
+model_name: "ce_audio_ColdZone"
+
+# 使用VGGish作为backbone
+backbone: "vggish"
+pretrained: true  # 使用预训练的VGGish权重
+
+print_val: false
+
+data:
+  batch_size: 32
+  dataset: ColdZone
+  val_dataset: ColdZone
+  test_dataset: null
+  train_aug: train
+  image_size: 64
+
+trainer:
+  num_sanity_val_steps: 0
+  check_val_every_n_epoch: 5
+  gpus: 1
+  max_epochs: 50  # 根据数据集大小调整
+  sync_batchnorm: false
+  weights_save_path: "ckpt/ce_audio_ColdZone_vggish"
+
+optimizer:
+  lr: 0.0001  # VGGish建议的学习率
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.StepLR
+  step_size: 20
+  gamma: 0.5
+
+launcher:
+  time: "6"
+

@@ -1,0 +1,48 @@
+# @package _global_
+# Stage 1: 源域预训练（cold_zone）- 使用 ResNet10
+# 使用交叉熵损失在源域数据上训练ResNet10 backbone
+
+defaults:
+  - /optimizer: SGD
+  - /eval: default_eval
+  - /eval/fine_tune: LR
+  - /callbacks: default_callbacks
+  - override /data: audio_data
+
+system_name: "ce"
+test: false
+eval_mode: "few_shot"
+model_name: "ce_audio_cold_zone_resnet10"
+
+# 使用ResNet10作为backbone
+backbone: "resnet10"
+pretrained: false  # ResNet10 不使用预训练权重
+
+print_val: false
+
+data:
+  batch_size: 32
+  dataset: cold_zone
+  val_dataset: cold_zone
+  test_dataset: null
+  train_aug: train
+  image_size: 64
+
+trainer:
+  num_sanity_val_steps: 0
+  check_val_every_n_epoch: 5
+  gpus: 1
+  max_epochs: 50  # 根据数据集大小调整
+  sync_batchnorm: false
+  weights_save_path: "ckpt/ce_audio_cold_zone_resnet10"
+
+optimizer:
+  lr: 0.001  # ResNet10 通常使用较高的学习率
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.StepLR
+  step_size: 20
+  gamma: 0.5
+
+launcher:
+  time: "6"
