@@ -4,5 +4,6 @@ data
 __pycache__
 *.jpg
 ckpt
-.pth
+*.pth
+
 ! configs/data/default_data.yaml
